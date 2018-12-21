@@ -1,0 +1,103 @@
+@import "bootstrap";
+//@import "bootstrap-sass";
+
+$mtg-logo-width: 200px;
+$mtg-logo-height: 200px;
+
+html, body{
+  height: 100%;
+  width: 100%
+}
+
+body{
+  position: absolute;
+  top: 0;
+  margin: 0;
+}
+
+header{
+  z-index: 2;
+  position: fixed;
+  top: 0;
+  height: 120px;
+  width: 100%;
+  background-color: black;
+  color: white;
+  div{
+    display: inline-block;
+    height: 100%;
+  }
+  a{
+    color: white;
+    //text-decoration: none;
+    font-size: 52px;
+  }
+  a:hover{
+    color: LightGray;
+    text-decoration: none;
+  }
+  .a{
+    text-align: center;
+    line-height: 120px;
+    margin-left: 31px;
+    a{
+      //text-decoration: none;
+      text-shadow: -1px 0 orange, 0 1px orange, 1px 0 orange, 0 -1px orange;
+    }
+  }
+  .b{
+    position: absolute;
+    left: calc(50% - 50px);
+    top: 5px;
+  }
+  .c{
+    float: right;
+    text-align: center;
+    line-height: 120px;
+    margin-right: 31px;
+    ul{
+      margin: 0;
+      height: 100%;
+      list-style-type: none;
+    }
+    li{
+      display: inline-block;
+      margin: auto 10px;
+      //width: 100px;
+      height: 120px;
+    }
+  }
+}
+
+.body-noh-nof{
+  margin-top: 10px;
+  width: 100%;
+  position: absolute;
+  top: 120px;
+  min-height: calc(100% - 160px);
+  //background-color: grey;
+}
+
+footer{
+  color: white;
+  height: 40px;
+  width: 100%;
+  position: absolute;
+  top: calc(100% - 40px);
+  background-color: black;
+}
+
+.button {
+  background-color: DarkOrange; /* Green */
+  border: 2px solid black;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+
+.center{
+  text-align: center;
+}

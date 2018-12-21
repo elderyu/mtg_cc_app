@@ -10,6 +10,10 @@
   </head>
 
   <body>
-    <%= yield %>
+    <%= render 'shared/header' %>
+    <div class="body-noh-nof">
+      <%= yield %>
+    </div>    
+    <%= render 'shared/footer' %>
   </body>
 </html>
