@@ -1,12 +1,1 @@
-<div class="center">
-  <%= image_tag("https://cdn.kitten-things.com/wp-content/uploads/2017/03/happy-kitten.jpg") %>
-
-  <h1>Welcome to MtG Card Collection App!</h1>
-
-  <p>Welcome to my first project on Ruby on Rails! I am going to make a MtG card database with possibility to search for cards, create decks and check other users' decks. I will try to make also some statistics, color proportions, segregations, etc. I hope you will enjoy it!</p>
-  <p>Do you want to join? </p>
-
-  <div class="button">
-    <%= link_to "Signup here!", signup_path %>
-  </div>
-</div>
+<%= render logged_in? ? 'home_logged' : 'home_not_logged' %>
