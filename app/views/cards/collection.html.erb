@@ -10,3 +10,11 @@
 <p>edit a deck</p>
 
 <p>You have <%= current_user.cards.count %> cards in your collection. </p>
+
+
+<% current_user.cards.each do |c| %>
+  <%= current_user.collected_cards.find_by(card_id: c.id).count %>x <%= c.title %>,
+<% end %>
+<% current_user.cards.each do |c| %>
+  <%= image_tag("#{c.image_url}") %>
+<% end %>
