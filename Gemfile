@@ -25,18 +25,15 @@ gem 'jbuilder', '~> 2.5'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
+#=========  moje gemy
 # for adding more users
 gem 'faker', '1.7.3'
-
 # for pagination
 gem 'will_paginate', '3.1.6'
 gem 'bootstrap-will_paginate', '1.0.0'
-
-
 # gem from javascript for messgaes on site
 gem 'jquery-rails', '~> 4.3', '>= 4.3.3'
 gem 'rails-ujs', '~> 0.1.0'
-
 #moze pomoze
 gem 'rails_12factor'
 gem 'bootstrap-sass', '3.3.7'
@@ -46,6 +43,10 @@ gem 'rails-controller-testing'
 gem 'bcrypt', '3.1.12'
 # See https://github.com/rails/execjs#readme for more supported runtimes
 gem 'duktape'
+# elastic search do wyszukiwania
+gem 'elasticsearch-model'
+gem 'elasticsearch-rails'
+
 
 # Use ActiveStorage variant
 # gem 'mini_magick', '~> 4.8'
@@ -60,12 +61,16 @@ group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'sqlite3', git: "https://github.com/larskanis/sqlite3-ruby", branch: "add-gemspec"
   gem 'byebug', platform: [:mri, :mingw, :x64_mingw]
+
+  #======= moje gemy
+  # Test Framework
+  gem 'rspec'
+  gem 'rspec-rails'
 end
 
 group :development do
   # Access an interactive console on exception pages or by calling 'console' anywhere in the code.
   gem 'web-console', '>= 3.3.0'
-
 end
 
 group :test do
@@ -76,6 +81,12 @@ group :test do
   gem 'minitest-reporters',       '1.1.14'
   # Easy installation and use of chromedriver to run system tests with Chrome
   gem 'chromedriver-helper', '1.2.0' # was 2.1.0, didnt work
+
+  #======= moje gemy
+  # Clean Database between tests
+  gem 'database_cleaner'
+  # Programmatically start and stop ES for tests
+  gem 'elasticsearch-extensions'
 end
 
 # postgreSQL used by heroku

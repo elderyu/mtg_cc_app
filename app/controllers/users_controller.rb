@@ -1,7 +1,6 @@
 class UsersController < ApplicationController
 before_action :require_logged_in, only: [:show]
 
-
   def new
     @user = User.new
   end
@@ -13,6 +12,7 @@ before_action :require_logged_in, only: [:show]
   def create
     @user = User.new(permitted_params)
     if @user.save
+      log_in @user
       redirect_to @user
     else
       render 'users/new'
@@ -28,7 +28,5 @@ before_action :require_logged_in, only: [:show]
     def require_logged_in
       redirect_to root_path unless logged_in?
     end
-
-
 
 end

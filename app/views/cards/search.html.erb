@@ -1,0 +1,28 @@
+<% provide title: 'Search' %>
+
+<div class="center jumbotron">
+  <%= image_tag("https://cdn.kitten-things.com/wp-content/uploads/2017/03/happy-kitten.jpg") %>
+
+  <h1>Search engine</h1>
+
+  <div class="row">
+    <div class="col-md-6 col-md-offset-3">
+      <%= form_for(:cards, url: search_url) do |form| %>
+
+        <%= form.text_field :card_name, class: 'form-control' %>
+
+        <%= form.submit "Find this card! or a random card", class: "btn btn-primary" %>
+
+      <% end %>
+    </div>
+  </div>
+
+  <!-- <div class="row">
+    <div class="col-md-6 col-md-offset-3">
+      <a href="#" class="btn btn-primary">Or find me a random card!</a>
+    </div>
+  </div> -->
+
+
+
+</div>
