@@ -16,7 +16,6 @@ class CardsController < ApplicationController
       @res_name = result["name"]
       @res_image = result["image_uris"]["normal"]
       card = Card.new(title: result["name"], image_url: result["image_uris"]["normal"])
-      card.save
       render 'search'
     else
       if params[:cards][:card_name].blank?
@@ -45,6 +44,22 @@ class CardsController < ApplicationController
 
   end
 
+  def add
+    begin
+      collected_card = Card.find_by(title: params[:title])
+      Rails::logger.debug collected_card
+      current_user.add_card collected_card
+      render 'cards/search'
+    rescue Exception => e
+      flash.now[:danger] = e.message
+      render 'cards/search'
+    end
+  end
 
+  private
+
+    def permitted_params
+      params.permit(:user_id, :card_id, :title, :cards["count"])
+    end
 
 end

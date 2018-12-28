@@ -38,7 +38,7 @@
         <p>Add this card to your collection</p>
         <%= form_for(:collection, url: add_path) do |form| %>
 
-          <input type="hidden" name="title" value= <%= @res_name %> >
+          <%= hidden_field_tag :title, @res_name %>
 
           <%= form.label :count %>
           <%= form.text_field :count, class: 'form-control' %>

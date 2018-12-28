@@ -15,7 +15,7 @@ resources :users
   get 'search', to: 'cards#search'
   post 'search', to: 'cards#find'
   get 'collection', to: 'cards#collection'
-  post 'add', to: 'collection#add'
+  post 'add', to: 'cards#add'
   get 'add', to: 'cards#search'
 
 
