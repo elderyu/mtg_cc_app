@@ -3,7 +3,7 @@ class CreateCollectedCards < ActiveRecord::Migration[5.2]
     create_table :collected_cards do |t|
       t.integer :user_id
       t.integer :count
-      t.string :title
+      t.integer :card_id
 
       t.timestamps
     end

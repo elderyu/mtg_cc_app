@@ -22,7 +22,7 @@ ActiveRecord::Schema.define(version: 2018_12_28_113200) do
   create_table "collected_cards", force: :cascade do |t|
     t.integer "user_id"
     t.integer "count"
-    t.string "title"
+    t.integer "card_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

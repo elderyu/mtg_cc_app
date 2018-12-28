@@ -10,7 +10,7 @@ class User < ApplicationRecord
 
   has_secure_password
 
-  has_many :collected_cards, class_name: "CollectedCards", dependent: :destroy, foreign_key: :id
+  has_many :collected_cards, dependent: :destroy
   has_many :cards, through: :collected_cards
 
   def User.digest string
@@ -33,6 +33,10 @@ class User < ApplicationRecord
 
   def authenticated?(remember_token)
     self.remember_digest.nil? ? false : BCrypt::Password.new(remember_digest).is_password?(remember_token)
+  end
+
+  def add_card card
+    cards << card
   end
 
 end

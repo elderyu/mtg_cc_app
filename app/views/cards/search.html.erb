@@ -36,7 +36,7 @@
     <div class="row">
       <div class="col-md-6 col-md-offset-3">
         <p>Add this card to your collection</p>
-        <%= form_for(:cards, url: add_path) do |form| %>
+        <%= form_for(:collection, url: add_path) do |form| %>
 
           <input type="hidden" name="title" value= <%= @res_name %> >
 

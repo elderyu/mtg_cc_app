@@ -1,5 +1,5 @@
 class CardsController < ApplicationController
-  # require 'open-uri'
+  require 'open-uri'
 
   def search
     @res = nil
@@ -45,10 +45,6 @@ class CardsController < ApplicationController
 
   end
 
-  def add
-    collected_card = CollectedCard.new(user_id: current_user.id, title: params[:title], count: params[:count])
-    collected_card.save
-    render 'search'
-  end
+
 
 end

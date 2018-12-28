@@ -15,7 +15,8 @@ resources :users
   get 'search', to: 'cards#search'
   post 'search', to: 'cards#find'
   get 'collection', to: 'cards#collection'
-  post 'add', to: 'cards#add'
+  post 'add', to: 'collection#add'
+  get 'add', to: 'cards#search'
 
 
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
