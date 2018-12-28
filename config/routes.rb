@@ -12,9 +12,10 @@ resources :users
   post 'login', to: 'sessions#create'
   delete 'logout', to: 'sessions#destroy'
 
-  # get 'search', to: 'cards#search'
-  # post 'search', to: 'cards#find'
-  # post 'search', to: 'cards#create'
+  get 'search', to: 'cards#search'
+  post 'search', to: 'cards#find'
+  get 'collection', to: 'cards#collection'
+  post 'add', to: 'cards#add'
 
 
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html

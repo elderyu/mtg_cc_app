@@ -1,4 +1,4 @@
-<% provide title: 'Search' %>
+<% provide :title, 'Search' %>
 
 <div class="center jumbotron">
   <%= image_tag("https://cdn.kitten-things.com/wp-content/uploads/2017/03/happy-kitten.jpg") %>
@@ -8,20 +8,49 @@
   <div class="row">
     <div class="col-md-6 col-md-offset-3">
       <%= form_for(:cards, url: search_url) do |form| %>
+        <input type="hidden" name="random" value="0">
 
         <%= form.text_field :card_name, class: 'form-control' %>
 
-        <%= form.submit "Find this card! or a random card", class: "btn btn-primary" %>
+        <%= form.submit "Find this card!", class: "btn btn-primary" %>
 
       <% end %>
     </div>
   </div>
 
-  <!-- <div class="row">
+  <div class="row">
     <div class="col-md-6 col-md-offset-3">
-      <a href="#" class="btn btn-primary">Or find me a random card!</a>
+      <%= form_for(:cards, url: search_url) do |form| %>
+        <input type="hidden" name="random" value="1">
+
+        <%= form.submit "Or find me a random card!", class: "btn btn-primary" %>
+
+      <% end %>
     </div>
-  </div> -->
+  </div>
+
+  <% unless @res_name.nil? %>
+    <%= @res_name %>
+    <%= image_tag("#{@res_image}") %>
+    <% if logged_in? %>
+    <div class="row">
+      <div class="col-md-6 col-md-offset-3">
+        <p>Add this card to your collection</p>
+        <%= form_for(:cards, url: add_path) do |form| %>
+
+          <input type="hidden" name="title" value= <%= @res_name %> >
+
+          <%= form.label :count %>
+          <%= form.text_field :count, class: 'form-control' %>
+
+          <%= form.submit "Add this card to your collection", class: "btn btn-primary" %>
+
+        <% end %>
+      </div>
+    </div>
+    <% end %>
+  <% end %>
+
 
 
 

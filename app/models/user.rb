@@ -10,6 +10,9 @@ class User < ApplicationRecord
 
   has_secure_password
 
+  has_many :collected_cards, class_name: "CollectedCards", dependent: :destroy, foreign_key: :id
+  has_many :cards, through: :collected_cards
+
   def User.digest string
     cost = ActiveModel::SecurePassword.min_cost ? BCrypt::Engine::MIN_COST : BCrypt::Engine.cost
     BCrypt::Password.create(string, cost: cost)
