@@ -1,25 +1,90 @@
 <h1>Search engine</h1>
 
 <div class="row">
-  <div class="col-md-6 col-md-offset-3">
+  <div class="col-md-8">
     <%= form_for(:cards, url: search_url) do |form| %>
-      <input type="hidden" name="random" value="0">
-
       <%= form.text_field :card_name, class: 'form-control' %>
-
-      <%= form.submit "Find this card!", class: "btn btn-primary" %>
-
-    <% end %>
   </div>
+  <div class="col-md-4">
+      <%= form.submit "Find this card!", class: "btn btn-primary" %>
+  </div>
+
 </div>
 
 <div class="row">
-  <div class="col-md-6 col-md-offset-3">
-    <%= form_for(:cards, url: search_url) do |form| %>
-      <input type="hidden" name="random" value="1">
-
-      <%= form.submit(@result.nil? ? "Or find me a random card!" : "Or find me another random card!", class: "btn btn-primary") %>
-
-    <% end %>
+  <div class="col-md-12">
+      <%= form.submit("Or find me a random card!", class: "btn btn-primary") %>
   </div>
 </div>
+
+<h2>Options and filters:</h2>
+
+<div class="row center">
+  <div class="col-md-6">
+    <div class="row center">
+      <h3>Colors</h3>
+        <ul class="colors center">
+          <li> <%= form.check_box :white, class: 'form-check-input'%> <%= image_tag("http://gatherer.wizards.com/images/Redesign/White_Mana.png") %> </li>
+          <li> <%= form.check_box :blue, class: 'form-check-input' %> <%= image_tag("http://gatherer.wizards.com/images/Redesign/Blue_Mana.png") %></li>
+          <li> <%= form.check_box :black, class: 'form-check-input' %> <%= image_tag("http://gatherer.wizards.com/images/Redesign/Black_Mana.png") %></li>
+          <li> <%= form.check_box :red, class: 'form-check-input' %> <%= image_tag("http://gatherer.wizards.com/images/Redesign/Red_Mana.png") %></li>
+          <li> <%= form.check_box :green, class: 'form-check-input' %> <%= image_tag("http://gatherer.wizards.com/images/Redesign/Green_Mana.png") %></li>
+          <li> <%= form.check_box :colorless, class: 'form-check-input' %> <%= image_tag("http://gatherer.wizards.com/images/Redesign/Colorless_Mana.png") %></li>
+        </ul>
+    </div>
+  </div>
+  <div class="row center">
+    <h3>Converted mana cost</h3>
+    <ul class="colors center">
+      <% (0..9).each do |num| %>
+      <li> <%= form.check_box "cmc#{num}".to_s, class: 'form-check-input'%> <%= "#{num}" %> </li>
+      <% end %>
+      <li> <%= form.check_box :cmc10m, class: 'form-check-input'%> 10+ </li>
+    </ul>
+  </div>
+</div>
+
+<div class="row center">
+  <h3>Card type</h3>
+  <ul class="colors center">
+    <li>Creature</li>
+    <li>Sorcery</li>
+    <li>Instant</li>
+    <li>Enchantment</li>
+    <li>Planeswalker</li>
+    <li>Other</li>
+  </ul>
+</div>
+
+<div class="row center">
+  <div class="col-md-6">
+    <div class="row center">
+      <h3>Power</h3>
+      <ul class="colors center">
+        <% (0..9).each do |num| %>
+        <li> <%= form.check_box "power#{num}".to_s, class: 'form-check-input'%> <%= "#{num}" %> </li>
+        <% end %>
+        <li> <%= form.check_box :power10m, class: 'form-check-input'%> 10+ </li>
+      </ul>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="row center">
+      <h3>Toughness</h3>
+      <ul class="colors center">
+        <% (0..9).each do |num| %>
+        <li> <%= form.check_box "tough#{num}".to_s, class: 'form-check-input'%> <%= "#{num}" %> </li>
+        <% end %>
+        <li> <%= form.check_box :tough10m, class: 'form-check-input'%> 10+ </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="row center">
+  <h3>Additional options</h3>
+  <ul>
+    Match colors exactly (search for multi-color cards only)
+  </ul>
+</div>
+<% end %>

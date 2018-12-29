@@ -6,16 +6,23 @@ class CardsController < ApplicationController
   end
 
   def find
-    if params[:random] == '1'
+    if params[:commit].include?("random")
       request_get_and_save "/random"
       render 'search'
     else
       if params[:cards][:card_name].blank?
-        flash.now[:danger] = "No card name entered."
-        render 'search'
+        # tymczasowo
+        if params[:cards][:red] == '1' && params[:cards][:cmc2] == '1'
+          request_get_and_save '/search?order=cmc&q=c%3Ared+pow%3D3'
+          render 'search'
+        else
+        # tymczasowo
+          flash.now[:danger] = "No card name entered."
+          render 'search'
+        end
       else
         begin
-          request_get_and_save "/named?exact=#{params[:cards][:card_name]}"
+          request_get_and_save "/named?fuzzy=#{params[:cards][:card_name]}"
           render 'search'
         rescue OpenURI::HTTPError => e
           flash.now[:danger] = "Card not found." if e.message == "404 Not Found"
@@ -59,9 +66,29 @@ class CardsController < ApplicationController
       url_base = "https://api.scryfall.com/cards"
       url = url_base + url_extra
       buffer = open(url).read
+      # Rails::logger.debug "%"*80
+      # Rails::logger.debug CGI.escape("power=3")
+      # Rails::logger.debug "%"*80
       @result = JSON.parse(buffer)
-      card = Card.new(title: @result["name"], image_url: @result["image_uris"]["normal"])
-      card.save
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      # @results = User.where(activated: true).paginate(page: params[:page])
+      # card = Card.new(title: @result["name"], image_url: @result["image_uris"]["normal"])
+      # card.save
     end
 
 end

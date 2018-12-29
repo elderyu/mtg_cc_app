@@ -423,9 +423,18 @@ span.picture {
 }
 
 .search_engine{
-  width: 50%;
+  height: 100%;
 }
 
 .searched_card{
-  width: 50%;
+  height: 100%;
+}
+
+.colors{
+  list-style-type: none;
+  display: inline-block;
+  padding-left: 0;
+  li{
+    float: left;
+  }
 }
