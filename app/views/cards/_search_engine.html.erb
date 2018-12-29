@@ -1,0 +1,25 @@
+<h1>Search engine</h1>
+
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+    <%= form_for(:cards, url: search_url) do |form| %>
+      <input type="hidden" name="random" value="0">
+
+      <%= form.text_field :card_name, class: 'form-control' %>
+
+      <%= form.submit "Find this card!", class: "btn btn-primary" %>
+
+    <% end %>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+    <%= form_for(:cards, url: search_url) do |form| %>
+      <input type="hidden" name="random" value="1">
+
+      <%= form.submit(@result.nil? ? "Or find me a random card!" : "Or find me another random card!", class: "btn btn-primary") %>
+
+    <% end %>
+  </div>
+</div>
