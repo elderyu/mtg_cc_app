@@ -1,10 +1,16 @@
 <% provide :title, 'Search' %>
 
   <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-3">
       <%= render 'search_engine' %>
     </div>
-    <div class="col-md-6 center searched_card">
-      <%= render 'searched_card' %>
+    <div class="col-md-9 center searched_card">
+      <% if @result.present? %>
+        <% if @result["total_cards"].present? %>
+          <%= render 'found_cards' %>
+        <% else %>
+          <%= render 'searched_card' %>
+        <% end %>
+      <% end %>
     </div>
   </div>

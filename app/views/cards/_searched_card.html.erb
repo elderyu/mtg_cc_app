@@ -10,16 +10,7 @@
         <%= image_tag("#{face["image_uris"]["normal"]}", alt: "mtg card") %>
       <% end %>
     <% end %>
-  <% else %>
-    <% @result["data"].each do |card| %>
-      <% if card["card_faces"].nil? %>
-        <%= image_tag("#{card["image_uris"]["small"]}", alt: "mtg card") %>
-      <% else %>
-        <% card["card_faces"].each do |face| %>
-          <%= image_tag("#{face["image_uris"]["small"]}", alt: "mtg card") %>
-        <% end %>
-      <% end %>
-    <% end %>
+    <%# <%= @result["name"] %>
   <% end %>
 
   <% if logged_in? && @result["data"].nil? %>
@@ -27,7 +18,7 @@
     <div class="col-md-6 col-md-offset-3">
       <%= form_for(:cards, url: add_path) do |form| %>
 
-        <%= hidden_field_tag :title, @result["name"] %>
+        <%= hidden_field_tag :name, @result["name"] %>
 
         <%= form.label :count %>
         <%= form.text_field :count, class: 'form-control' %>

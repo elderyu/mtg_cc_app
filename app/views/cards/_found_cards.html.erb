@@ -1,0 +1,36 @@
+<table class="table card-table">
+  <thead>
+    <tr>
+      <th scope="col">Image</th>
+      <th scope="col">Name</th>
+      <th scope="col">Card Type</th>
+      <th scope="col">Mana cost</th>
+      <th scope="col">Power/Toghness</th>
+      <th scope="col">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @result["data"].each do |result|%>
+    <tr>
+      <td class="images">
+        <% if result["card_faces"].nil? %>
+          <%= image_tag("#{result["image_uris"]["small"]}", alt: "mtg card") %>
+        <% else %>
+        <div class="row">
+          <% result["card_faces"].each do |face| %>
+          <div class="column">
+            <%= image_tag("#{face["image_uris"]["small"]}", alt: "mtg card") %>
+          </div>
+          <% end %>
+        </div>
+        <% end %>
+      </td>
+      <td> <%= result["name"] %> </td>
+      <td> <%= result["type_line"] %> </td>
+      <td> <%= result["mana_cost"] %> </td>
+      <td> <%= result["power"].present? ? (result["power"] + " / " + result["toughness"]) : "-/-" %> </td>
+      <td> <%= result["oracle_text"] %> </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>

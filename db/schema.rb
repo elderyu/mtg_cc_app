@@ -13,8 +13,15 @@
 ActiveRecord::Schema.define(version: 2018_12_28_113200) do
 
   create_table "cards", force: :cascade do |t|
-    t.string "title"
-    t.string "image_url"
+    t.string "name"
+    t.string "image_url_normal"
+    t.string "image_url_small"
+    t.string "mana_cost"
+    t.string "cmc"
+    t.string "type_line"
+    t.string "oracle_text"
+    t.string "power"
+    t.string "toughness"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

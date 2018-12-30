@@ -33,24 +33,25 @@ class CardsController < ApplicationController
   end
 
   def collection
-
+    @result = current_user.cards
   end
 
   def add
-    if params[:cards][:count]
+    raise
+    if params[:cards][:count].nil?
       # errors.add "Number of cards was not specified."
       flash.now[:danger] = "Number of cards was not specified."
-      request_get_and_save "/named?exact=#{params[:title]}"
+      request_get_and_save "/named?exact=#{params[:name]}"
       render 'search'
     else
-      begin
-        collected_card = Card.find_by(title: params[:title])
-        current_user.add_card collected_card
-        current_user.collected_cards.where(card_id: collected_card.id).update(count: params[:cards][:count])
-        flash.now[:success] = "#{params["title"]} successfully added to your collection! Number of copies: #{params[:cards][:count]}"
+      if params[:name].include? " // "
+        card_names = params[:name].split " // "
+        card_names.each do |card_name|
+          add_to_collection card_name
+        end
         render 'search'
-      rescue Exception => e
-        flash.now[:danger] = e.message
+      else
+        add_to_collection params[:name]
         render 'search'
       end
     end
@@ -58,37 +59,64 @@ class CardsController < ApplicationController
 
   private
 
+    def add_to_collection card_name
+      collected_card = Card.find_by(name: card_name)
+      current_user.add_card collected_card
+      current_user.collected_cards.where(card_id: collected_card.id).update(count: params[:cards][:count])
+      flash.now[:success] = "#{params[:name]} successfully added to your collection! Number of copies: #{params[:cards][:count]}"
+    end
+
     def permitted_params
-      params.permit(:user_id, :card_id, :title, :cards["count"])
+      params.permit(:user_id, :card_id, :name, :cards["count"])
     end
 
     def request_get_and_save url_extra=''
       url_base = "https://api.scryfall.com/cards"
       url = url_base + url_extra
       buffer = open(url).read
-      # Rails::logger.debug "%"*80
-      # Rails::logger.debug CGI.escape("power=3")
-      # Rails::logger.debug "%"*80
-      @result = JSON.parse(buffer)
-      
+      result = JSON.parse(buffer)
+      if result.present?
+        @result = result
+        if result["data"].present?
+          result = result["data"]
+          save_multiple_cards result
+        else
+          save_one_card result
+        end
+      end
+    end
 
+    # zapisywanie kart do bazy
 
+    def save_multiple_cards result
+      result.each do |card|
+        save_one_card card
+      end
+    end
 
+    def save_one_card card
+      if card["card_faces"].present?
+        card["card_faces"].each do |face|
+          save_one_face face
+        end
+      else
+        save_one_face card
+      end
+    end
 
-
-
-
-
-
-
-
-
-
-
-
-      # @results = User.where(activated: true).paginate(page: params[:page])
-      # card = Card.new(title: @result["name"], image_url: @result["image_uris"]["normal"])
-      # card.save
+    def save_one_face card
+      card = Card.new(
+        name: card["name"],
+        image_url_normal: card["image_uris"]["normal"],
+        image_url_small: card["image_uris"]["small"],
+        mana_cost: card["mana_cost"],
+        cmc: card["cmc"],
+        type_line: card["type_line"],
+        oracle_text: card["oracle_text"],
+        power: card["power"],
+        toughness: card["toughness"],
+      )
+      card.save
     end
 
 end
