@@ -81,7 +81,7 @@ class CardsController < ApplicationController
         else
           save_one_card result
         end
-        flash.now[:danger] = result
+        # flash.now[:danger] = result
       end
     end
 
