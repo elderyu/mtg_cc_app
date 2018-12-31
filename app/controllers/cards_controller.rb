@@ -6,30 +6,28 @@ class CardsController < ApplicationController
   end
 
   def find
+    # temp
     if params[:commit].include?("random")
       request_get_and_save "/random"
-      render 'search'
+    # temp end
     else
       if params[:cards][:card_name].blank?
-        # tymczasowo
+        # temp
         if params[:cards][:red] == '1' && params[:cards][:cmc2] == '1'
           request_get_and_save '/search?order=cmc&q=c%3Ared+pow%3D3'
-          render 'search'
         else
-        # tymczasowo
+        # temp end
           flash.now[:danger] = "No card name entered."
-          render 'search'
         end
       else
         begin
           request_get_and_save "/named?fuzzy=#{params[:cards][:card_name]}"
-          render 'search'
         rescue OpenURI::HTTPError => e
           flash.now[:danger] = "Card not found." if e.message == "404 Not Found"
-          render 'search'
         end
       end
     end
+    render 'search'
   end
 
   def collection
@@ -37,30 +35,30 @@ class CardsController < ApplicationController
   end
 
   def add
-    raise
     if params[:cards][:count].nil?
-      # errors.add "Number of cards was not specified."
       flash.now[:danger] = "Number of cards was not specified."
       request_get_and_save "/named?exact=#{params[:name]}"
-      render 'search'
     else
-      if params[:name].include? " // "
-        card_names = params[:name].split " // "
-        card_names.each do |card_name|
-          add_to_collection card_name
-        end
-        render 'search'
-      else
-        add_to_collection params[:name]
-        render 'search'
-      end
+      add_to_collection params[:name]
     end
+    render 'search'
   end
 
   private
 
     def add_to_collection card_name
-      collected_card = Card.find_by(name: card_name)
+      if params["layout"] == "transform"
+        faces_names = params["name"].split(" // ")
+        faces_names.each do |face_name|
+          add_face_to_collection face_name
+        end
+      else
+        add_face_to_collection card_name
+      end
+    end
+
+    def add_face_to_collection face_name
+      collected_card = Card.find_by(name: face_name)
       current_user.add_card collected_card
       current_user.collected_cards.where(card_id: collected_card.id).update(count: params[:cards][:count])
       flash.now[:success] = "#{params[:name]} successfully added to your collection! Number of copies: #{params[:cards][:count]}"
@@ -95,7 +93,7 @@ class CardsController < ApplicationController
     end
 
     def save_one_card card
-      if card["card_faces"].present?
+      if card["layout"] == "transform"
         card["card_faces"].each do |face|
           save_one_face face
         end
@@ -112,11 +110,24 @@ class CardsController < ApplicationController
         mana_cost: card["mana_cost"],
         cmc: card["cmc"],
         type_line: card["type_line"],
-        oracle_text: card["oracle_text"],
+        oracle_text: oracle_text(card),
         power: card["power"],
         toughness: card["toughness"],
       )
       card.save
+    end
+
+    def oracle_text card
+      if card["layout"] == "split"
+        oracle_text = ""
+        card["card_faces"].each do |face|
+          Rails::logger.debug "card_face_flower"
+          oracle_text << (face["name"] + ": " + face["oracle_text"] + "\n")
+        end
+        oracle_text
+      else
+        card["oracle_text"]
+      end
     end
 
 end
