@@ -2,66 +2,90 @@ class CardsController < ApplicationController
   require 'open-uri'
 
   def search
-    @res = nil
+    # @result = nil
+    @colors = ["white", "blue", "black", "red", "green", "colorless"]
+    @types = ["creature", "instant", "sorcery", "enchantment", "planeswalker", "other"]
+    @colors_images = Hash.new()
+    @colors.each do |color|
+      @colors_images[color] = "http://gatherer.wizards.com/images/Redesign/#{color.capitalize}_Mana.png"
+    end
   end
 
   def find
+    if params[:total_cards] == "1" || params[:total_cards] == nil
+
+    else
+      @result = @result["data"]
+    end
+    # bardzo temporary !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    # @result = nil
+    @colors = ["white", "blue", "black", "red", "green", "colorless"]
+    @types = ["creature", "instant", "enchantment", "planeswalker", "other"]
+    @colors_images = Hash.new()
+    @colors.each do |color|
+      @colors_images[color] = "http://gatherer.wizards.com/images/Redesign/#{color.capitalize}_Mana.png"
+    end
+
     # temp
+    # jeśli jest random, szukaj randoma, jeśli nie, czegoś konkretnego
     if params[:commit].include?("random")
       request_get_and_save "/random"
     # temp end
     else
-      if params[:cards][:card_name].blank?
-        # temp
-        if params[:cards][:red] == '1' && params[:cards][:cmc2] == '1'
-          request_get_and_save '/search?order=cmc&q=c%3Ared+pow%3D3'
-        else
-        # temp end
-          flash.now[:danger] = "No card name entered."
-        end
-      else
-        begin
-          request_get_and_save "/named?fuzzy=#{params[:cards][:card_name]}"
-        rescue OpenURI::HTTPError => e
-          flash.now[:danger] = "Card not found." if e.message == "404 Not Found"
-        end
+      begin
+        # append = "/named?"
+        append = params[:cards][:match_name_exactly] == "1" ? "/named?exact=" : "/search?q="
+        append += params[:cards][:card_name] if params[:cards][:card_name].present?
+        append += add_types_to_search
+        append += add_colors_to_search
+        Rails::logger.debug append
+        request_get_and_save append
+      rescue OpenURI::HTTPError => e
+        flash.now[:danger] = "Card not found." if e.message == "404 Not Found"
       end
     end
-    render 'search'
-  end
-
-  def collection
-    @result = current_user.cards
-  end
-
-  def add
-    if params[:cards][:count].nil?
-      flash.now[:danger] = "Number of cards was not specified."
-      request_get_and_save "/named?exact=#{params[:name]}"
-    else
-      add_to_collection params[:name]
-    end
+    # raise
     render 'search'
   end
 
   private
 
-    def add_to_collection card_name
-      if params["layout"] == "transform"
-        faces_names = params["name"].split(" // ")
-        faces_names.each do |face_name|
-          add_face_to_collection face_name
-        end
+    def add_types_to_search
+      types_to_search = Array.new
+      params[:cards][:card_type].each do |type,bool|
+        types_to_search << CGI::escape("type:" + type) if bool == "1"
+      end
+      if types_to_search.empty?
+        return ""
       else
-        add_face_to_collection card_name
+        if types_to_search.count == 1
+          types_to_search = "+#{types_to_search[0]}"
+        else
+          types_to_search = types_to_search.join("+OR+")
+          types_to_search = "+" + CGI::escape("(") +types_to_search + CGI::escape(")")
+        end
       end
     end
 
-    def add_face_to_collection face_name
-      collected_card = Card.find_by(name: face_name)
-      current_user.add_card collected_card
-      current_user.collected_cards.where(card_id: collected_card.id).update(count: params[:cards][:count])
-      flash.now[:success] = "#{params[:name]} successfully added to your collection! Number of copies: #{params[:cards][:count]}"
+    def add_colors_to_search
+      colors_to_search = ""
+      params[:cards][:color].each do |color,bool|
+        if bool == "1"
+          if color == "blue"
+            colors_to_search += "U"
+          else
+            colors_to_search += color.capitalize[0]
+          end
+        end
+      end
+      unless colors_to_search == ""
+        if params["cards"]["match_colors_roughly"] == "1"
+          colors_to_search = "+" + CGI::escape("color<=#{colors_to_search}")
+        else
+          colors_to_search = "+" + CGI::escape("color=#{colors_to_search}")
+        end
+      end
+      colors_to_search
     end
 
     def permitted_params

@@ -8,6 +8,7 @@
       <th scope="col">Power/Toghness</th>
       <th scope="col">Description</th>
       <th scope="col">Number of copies</th>
+      <th scope="col">Delete</th>
     </tr>
   </thead>
   <tbody>
@@ -32,6 +33,14 @@
       <td> <%= result["power"].present? ? (result["power"] + " / " + result["toughness"]) : "-/-" %> </td>
       <td> <%= result["oracle_text"] %> </td>
       <td> <%= current_user.collected_cards.find_by(card_id: result.id).count %> </td>
+      <td>
+        <%= form_for(current_user.collected_cards.find_by(card_id: result.id), html: {method: :delete}) do |form| %>
+          <%= form.submit("Delete", class: "btn") %>
+          <%# <%= button_tag(type: "submit", class: "close", "aria-label" => "Close") do %>
+            <!-- <span aria-hidden="true">&times;</span> -->
+          <%# <% end %>
+        <% end %>
+      </td>
     </tr>
     <% end %>
   </tbody>

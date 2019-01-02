@@ -34,3 +34,18 @@
     <% end %>
   </tbody>
 </table>
+
+<script>
+function place_mana_images() {
+  var content = document.body.textContent || document.body.innerText;
+  var hasText = content.indexOf("{R}")!==-1;
+  if (hasText) {
+      document.getElementById("show").style.display = 'block';
+  } else {
+      document.getElementById("show").style.display = 'none';
+  }
+    return true;
+}
+
+function place_mana_images();
+</script>

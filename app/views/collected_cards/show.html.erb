@@ -1,0 +1,8 @@
+<% provide :title, "Collection" %>
+<h1>Your Collection</h1>
+
+<p>You have <%= current_user.cards.count %> unique cards in your collection. </p>
+
+<p>You have <%= current_user.cards.sum(:count) %> cards in your collection. </p>
+
+<%= render 'collection_table' %>

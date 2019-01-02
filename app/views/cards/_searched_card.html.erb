@@ -1,33 +1,23 @@
-<% if @result.nil? %>
-  <%= image_tag("https://d1u5p3l4wpay3k.cloudfront.net/mtgsalvation_gamepedia/thumb/f/f8/Magic_card_back.jpg/200px-Magic_card_back.jpg?version=4f6a80129fc99f07b7723141b122def4", alt: "mtg-card") %>
+<div class="center">
+  <% if @result["layout"] != "transform" %>
+    <%= image_tag("#{@result["image_uris"]["normal"]}", alt: "mtg card") %>
   <% else %>
-
-  <% if @result["data"].nil? %>
-    <% if @result["layout"] != "transform" %>
-      <%= image_tag("#{@result["image_uris"]["normal"]}", alt: "mtg card") %>
-    <% else %>
-      <% @result["card_faces"].each do |face| %>
-        <%= image_tag("#{face["image_uris"]["normal"]}", alt: "mtg card") %>
-      <% end %>
+    <% @result["card_faces"].each do |face| %>
+      <%= image_tag("#{face["image_uris"]["normal"]}", alt: "mtg card") %>
     <% end %>
-    <%# <%= @result["name"] %>
   <% end %>
+</div>
 
-  <% if logged_in? && @result["data"].nil? %>
-  <div class="row">
-    <div class="col-md-6 col-md-offset-3">
-      <%= form_for(:cards, url: add_path) do |form| %>
-
-        <%= hidden_field_tag :layout, @result["layout"] %>
-        <%= hidden_field_tag :name, @result["name"] %>
-
-        <%= form.label :count %>
-        <%= form.text_field :count, class: 'form-control' %>
-
-        <%= form.submit "Add this card to your collection", class: "btn btn-primary" %>
-
-      <% end %>
-    </div>
+<% if logged_in? && @result.present? %>
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+    <%= form_for(collected_cards_create_path, url: add_path) do |form| %>
+      <%= hidden_field_tag :name, @result["name"] %>
+      <%= hidden_field_tag :layout, @result["layout"] %>
+      <%= form.label :count %>
+      <%= form.text_field :count, class: 'form-control' %>
+      <%= form.submit "Add this card to your collection", class: "btn btn-primary" %>
+    <% end %>
   </div>
-  <% end %>
+</div>
 <% end %>
