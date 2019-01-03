@@ -26,6 +26,8 @@ gem 'jbuilder', '~> 2.5'
 # gem 'bcrypt', '~> 3.1.7'
 
 #=========  moje gemy
+# do listy wybieranej
+gem 'bootstrap-select-rails'
 # for adding more users
 gem 'faker', '1.7.3'
 # for pagination

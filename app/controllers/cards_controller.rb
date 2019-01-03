@@ -51,32 +51,35 @@ class CardsController < ApplicationController
   private
 
     def add_types_to_search
-      types_to_search = Array.new
-      params[:cards][:card_type].each do |type,bool|
-        types_to_search << CGI::escape("type:" + type) if bool == "1"
-      end
-      if types_to_search.empty?
+      if params[:cards][:card_type].count == 1
         return ""
       else
-        if types_to_search.count == 1
-          types_to_search = "+#{types_to_search[0]}"
-        else
-          types_to_search = types_to_search.join("+OR+")
-          types_to_search = "+" + CGI::escape("(") +types_to_search + CGI::escape(")")
+        types_to_search = Array.new
+        params[:cards][:card_type].each do |type|
+          types_to_search << CGI::escape("type:" + type.downcase)
         end
+        if types_to_search.empty?
+          return ""
+        else
+          if types_to_search.count == 1
+            types_to_search = "+#{types_to_search[0]}"
+          else
+            types_to_search = types_to_search.join("+OR+")
+            types_to_search = "+" + CGI::escape("(") +types_to_search + CGI::escape(")")
+          end
+        end 
       end
     end
 
     def add_colors_to_search
       colors_to_search = ""
-      params[:cards][:color].each do |color,bool|
-        if bool == "1"
+      # Uwaga: jak nie ma nic do przekazania w tablicy to do parmasów domyślnie dorzucany jest "", żeby tablica była
+      params[:cards][:color][1..-1].each do |color|
           if color == "blue"
             colors_to_search += "U"
           else
             colors_to_search += color.capitalize[0]
           end
-        end
       end
       unless colors_to_search == ""
         if params["cards"]["match_colors_roughly"] == "1"

@@ -31,25 +31,24 @@
       <td> <%= result["mana_cost"] %> </td>
       <td> <%= result["power"].present? ? (result["power"] + " / " + result["toughness"]) : "-/-" %> </td>
       <td> <%= result["oracle_text"] %> </td>
-      <td>
-        Bedzie jutro
-      </td>
+      <% if logged_in? %>
+        <td>
+          <%= form_for(:cards, url: add_path) do |form| %>
+            <%= hidden_field_tag :layout, result["layout"] %>
+            <%= hidden_field_tag :name, result["name"] %>
+            <div class="center">
+              <div class="col-md-4">
+                <%= form.label :count %>
+                <%= form.text_field :count, class: 'form-control' %>
+              </div>
+              <div class="col-md-8">
+                <%= form.submit "Add this card to your collection", class: "btn btn-primary btn-wrap" %>
+              </div>
+            </div>
+          <% end %>
+        </td>
+      <% end %>
     </tr>
     <% end %>
   </tbody>
 </table>
-
-<script>
-function place_mana_images() {
-  var content = document.body.textContent || document.body.innerText;
-  var hasText = content.indexOf("{R}")!==-1;
-  if (hasText) {
-      document.getElementById("show").style.display = 'block';
-  } else {
-      document.getElementById("show").style.display = 'none';
-  }
-    return true;
-}
-
-function place_mana_images();
-</script>

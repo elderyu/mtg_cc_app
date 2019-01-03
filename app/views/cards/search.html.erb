@@ -1,12 +1,12 @@
 <% provide :title, 'Search' %>
 
 <div class="row">
-  <div class="col-md-8 col-md-offset-2">
+  <div class="col-md-10 col-md-offset-1">
     <%= render 'search_engine' %>
   </div>
   <% if @result.present? %>
     <% if @result["total_cards"].nil? %>
-      <% Rails::logger.debug @result %>
+      <%# <% Rails::logger.debug @result %>
       <%= render 'searched_card' %>
     <% else %>
       <%= render 'found_cards' %>

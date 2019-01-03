@@ -155,10 +155,18 @@ h1 {
 h2 {
   font-size: 1.2em;
   letter-spacing: -1px;
-  margin-bottom: 30px;
+  margin-bottom: 10px;
   text-align: center;
   font-weight: normal;
   color: $gray-light;
+}
+
+h3 {
+  font-size: 2.4em;
+  letter-spacing: -1px;
+  margin-bottom: 10px;
+  text-align: center;
+  font-weight: normal;
 }
 
 p {
@@ -451,4 +459,20 @@ span.picture {
     clear: both;
     display: table;
   }
+}
+
+.btn-wrap{
+  white-space: normal;
+}
+
+.filters{
+  align-items: center;
+
+  text-align: center;
+}
+
+
+#button-random-card{
+  position: relative;
+  margin: 10px auto;
 }
