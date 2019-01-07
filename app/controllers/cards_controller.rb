@@ -159,8 +159,7 @@ class CardsController < ApplicationController
 
     def save_mana_cost mana_cost
       if mana_cost.present?
-        mana_cost = mana_cost.tr('{}',' ').split(' ').collect{|mana| mana.tr('/','')}
-        Rails::logger.debug mana_cost
+        mana_cost = mana_cost.tr('{}',' ')
       end
       mana_cost
     end

@@ -2,8 +2,8 @@ class CollectedCardsController < ApplicationController
 
   def show
     @result = current_user.cards
-    @mana_cost = @result["mana_cost"]
-    # Rails::logger.debug mana_cost
+    # @mana_cost = @result["mana_cost"]
+    # Rails::logger.debug @result[1]["mana_cost"].class
   end
 
   def create

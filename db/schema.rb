@@ -10,13 +10,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_12_28_113200) do
+ActiveRecord::Schema.define(version: 2019_01_07_171634) do
 
   create_table "cards", force: :cascade do |t|
     t.string "name"
     t.string "image_url_normal"
     t.string "image_url_small"
-    t.string "mana_cost"
     t.string "cmc"
     t.string "type_line"
     t.string "oracle_text"
@@ -24,6 +23,7 @@ ActiveRecord::Schema.define(version: 2018_12_28_113200) do
     t.string "toughness"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "mana_cost", default: "--- []\n"
   end
 
   create_table "collected_cards", force: :cascade do |t|

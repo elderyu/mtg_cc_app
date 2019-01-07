@@ -5,7 +5,7 @@
       <th scope="col">Name</th>
       <th scope="col">Card Type</th>
       <th scope="col">Mana cost</th>
-      <th scope="col">Power/Toghness</th>
+      <th scope="col">Power/<br>Toughness</th>
       <th scope="col">Description</th>
       <th scope="col">Number of copies</th>
       <th scope="col">Delete</th>
@@ -29,11 +29,13 @@
       </td>
       <td> <%= result["name"] %> </td>
       <td> <%= result["type_line"] %> </td>
-      <td>
-
-        <div class="mana_cost">
-          <%= result["mana_cost"] %>
-        </div>
+      <td style="min-width: 120px">
+          <% result["mana_cost"].split(' ').each do |mana| %>
+            <% unless mana == "//" %>
+              <% mana.tr!('/ ','') %>
+              <img src=<%= "http://gatherer.wizards.com/Handlers/Image.ashx?size=medium&name=#{mana}&type=symbol" %> alt="mana">
+            <% end %>
+          <% end %>
       </td>
       <td> <%= result["power"].present? ? (result["power"] + " / " + result["toughness"]) : "-/-" %> </td>
       <td> <%= result["oracle_text"] %> </td>
