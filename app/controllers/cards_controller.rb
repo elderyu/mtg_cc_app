@@ -135,21 +135,20 @@ class CardsController < ApplicationController
         name: card["name"],
         image_url_normal: card["image_uris"]["normal"],
         image_url_small: card["image_uris"]["small"],
-        mana_cost: card["mana_cost"],
+        mana_cost: save_mana_cost(card["mana_cost"]),
         cmc: card["cmc"],
         type_line: card["type_line"],
-        oracle_text: oracle_text(card),
+        oracle_text: save_oracle_text(card),
         power: card["power"],
         toughness: card["toughness"],
       )
       card.save
     end
 
-    def oracle_text card
+    def save_oracle_text card
       if card["layout"] == "split"
         oracle_text = ""
         card["card_faces"].each do |face|
-          Rails::logger.debug "card_face_flower"
           oracle_text << (face["name"] + ": " + face["oracle_text"] + "\n")
         end
         oracle_text
@@ -158,4 +157,11 @@ class CardsController < ApplicationController
       end
     end
 
+    def save_mana_cost mana_cost
+      if mana_cost.present?
+        mana_cost = mana_cost.tr('{}',' ').split(' ').collect{|mana| mana.tr('/','')}
+        Rails::logger.debug mana_cost
+      end
+      mana_cost
+    end
 end

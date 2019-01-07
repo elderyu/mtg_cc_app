@@ -29,19 +29,47 @@
       </td>
       <td> <%= result["name"] %> </td>
       <td> <%= result["type_line"] %> </td>
-      <td> <%= result["mana_cost"] %> </td>
+      <td>
+
+        <div class="mana_cost">
+          <%= result["mana_cost"] %>
+        </div>
+      </td>
       <td> <%= result["power"].present? ? (result["power"] + " / " + result["toughness"]) : "-/-" %> </td>
       <td> <%= result["oracle_text"] %> </td>
-      <td> <%= current_user.collected_cards.find_by(card_id: result.id).count %> </td>
+      <td>
+        <%= form_for(CollectedCard.find_by(card_id: result.id, user_id: current_user.id)) do |f| %>
+          <table width="100%">
+            <tr>
+              <td width=33%>
+                <% if current_user.collected_cards.find_by(card_id: result.id).count == 0 %>
+                  <button type="button" name="button" class="btn">-</button>
+                <% else %>
+                  <%= f.submit("-", class: "btn btn-primary") %>
+                <% end %>
+              </td>
+              <td width=33%>
+                <%= current_user.collected_cards.find_by(card_id: result.id).count %>
+              </td>
+              <td width=33%>
+                <%= f.submit("+", class: "btn btn-primary") %>
+              </td>
+            </tr>
+          </table>
+        <% end %>
+      </td>
       <td>
         <%= form_for(current_user.collected_cards.find_by(card_id: result.id), html: {method: :delete}) do |form| %>
           <%= form.submit("Delete", class: "btn") %>
-          <%# <%= button_tag(type: "submit", class: "close", "aria-label" => "Close") do %>
-            <!-- <span aria-hidden="true">&times;</span> -->
-          <%# <% end %>
         <% end %>
       </td>
     </tr>
     <% end %>
   </tbody>
 </table>
+
+<script type="text/javascript">
+  old_text = document.getElementsByClassName('mana_cost');
+  old_text.style.display="none";
+  console.log(old_text.innerHTML);
+</script>
