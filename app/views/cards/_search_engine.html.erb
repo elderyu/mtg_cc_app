@@ -1,3 +1,6 @@
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.7.5/js/bootstrap-select.min.js"></script>
+
 <h1>Search engine</h1>
   <%= form_for(:cards, url: search_url) do |form| %>
   <div class="col-md-8 col-md-offset-2">
@@ -47,3 +50,9 @@
   <%= form.submit("Or find me a random card with these parameters!", class: "btn btn-primary") %>
 </div>
 <% end %>
+
+<script type="text/javascript">
+  $(".selectpicker").selectpicker({
+      "title": "Select Options"
+  }).selectpicker("render");
+</script>
