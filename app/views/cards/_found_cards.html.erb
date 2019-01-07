@@ -14,15 +14,16 @@
     <% @result["data"].each do |result|%>
     <tr>
       <td class="images">
-        <% if result["card_faces"].nil? %>
-          <%= image_tag("#{result["image_uris"]["small"]}", alt: "mtg card") %>
-        <% else %>
+        <% if result["layout"] == "transform" %>
         <div class="row">
           <% result["card_faces"].each do |face| %>
           <div class="column">
             <%= image_tag("#{face["image_uris"]["small"]}", alt: "mtg card") %>
           </div>
           <% end %>
+
+        <% else %>
+          <%= image_tag("#{result["image_uris"]["small"]}", alt: "mtg card") %>
         </div>
         <% end %>
       </td>
@@ -36,15 +37,9 @@
           <%= form_for(:cards, url: add_path) do |form| %>
             <%= hidden_field_tag :layout, result["layout"] %>
             <%= hidden_field_tag :name, result["name"] %>
-            <div class="center">
-              <div class="col-md-4">
-                <%= form.label :count %>
-                <%= form.text_field :count, class: 'form-control' %>
-              </div>
-              <div class="col-md-8">
-                <%= form.submit "Add this card to your collection", class: "btn btn-primary btn-wrap" %>
-              </div>
-            </div>
+            <%= form.label :count %>
+            <%= form.text_field :count, class: 'form-control' %>
+            <%= form.submit "Add this card to your collection", class: "btn btn-primary btn-wrap" %>
           <% end %>
         </td>
       <% end %>

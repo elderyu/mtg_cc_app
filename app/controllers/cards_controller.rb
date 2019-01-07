@@ -12,11 +12,11 @@ class CardsController < ApplicationController
   end
 
   def find
-    if params[:total_cards] == "1" || params[:total_cards] == nil
-
-    else
-      @result = @result["data"]
-    end
+    # if params[:total_cards] == "1" || params[:total_cards] == nil
+    #   @result = params
+    # else
+    #   @result = params["data"]
+    # end
     # bardzo temporary !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     # @result = nil
     @colors = ["white", "blue", "black", "red", "green", "colorless"]
@@ -67,7 +67,7 @@ class CardsController < ApplicationController
             types_to_search = types_to_search.join("+OR+")
             types_to_search = "+" + CGI::escape("(") +types_to_search + CGI::escape(")")
           end
-        end 
+        end
       end
     end
 

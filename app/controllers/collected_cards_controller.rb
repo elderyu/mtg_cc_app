@@ -41,6 +41,6 @@ class CollectedCardsController < ApplicationController
       current_user.add_card collected_card
       CollectedCard.find_by(user_id: current_user.id, card_id: collected_card.id).update(count: params["cards"]["count"])
     end
-    flash[:success] = "#{params[:name]} successfully added to your collection! Total number of copies: #{params["cards"]["count"]}"
+    flash[:success] = "#{params[:name]} successfully added to your collection! Total number of copies: #{CollectedCard.find_by(user_id: current_user.id, card_id: collected_card.id).count}"
   end
 end

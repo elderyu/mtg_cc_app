@@ -20,17 +20,17 @@
           <h2>Card type</h2>
           <%= form.select "card_type", @types.collect {|type| type.capitalize}, {}, {class: "selectpicker option", "data-style": "btn-primary", "multiple": "1", include_blank: false} %>
           <h2>Power</h2>
-          <%= form.select "power", (('0'..'9').to_a << "10+") , {}, {class: "selectpicker", "data-style": "btn-primary", "multiple": "1"} %>
+          <%# <%= form.select "power", (('0'..'9').to_a << "10+") , {}, {class: "selectpicker", "data-style": "btn-primary", "multiple": "1"} %> %>
         </div>
         <div class="col-md-4 filters">
           <h2>Colors</h2>
           <%= form.select "color", @colors.collect {|color| color.capitalize}, {}, {class: "selectpicker", "data-style": "btn-primary", "multiple": "1"} %>
           <h2>Toughness</h2>
-          <%= form.select "toughness", (('0'..'9').to_a << "10+") , {}, {class: "selectpicker", "data-style": "btn-primary", "multiple": "1"} %>
+          <%# <%= form.select "toughness", (('0'..'9').to_a << "10+") , {}, {class: "selectpicker", "data-style": "btn-primary", "multiple": "1"} %> %>
         </div>
         <div class="col-md-4 filters">
           <h2>Converted mana cost</h2>
-            <%= form.select "cmc", (('0'..'9').to_a << "10+") , {}, {class: "selectpicker", "data-style": "btn-primary", "multiple": "1"} %>
+            <%# <%= form.select "cmc", (('0'..'9').to_a << "10+") , {}, {class: "selectpicker", "data-style": "btn-primary", "multiple": "1"} %> %>
         </div>
       </div>
     </div>
@@ -47,7 +47,7 @@
     </div>
   </div>
 <div id="button-random-card">
-  <%= form.submit("Or find me a random card with these parameters!", class: "btn btn-primary") %>
+  <%= form.submit("Or find me a random card!", class: "btn btn-primary") %>
 </div>
 <% end %>
 

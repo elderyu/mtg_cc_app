@@ -7,7 +7,7 @@
 // $mtg-logo-height: 200px;
 //
 html{
-  min-height: 100%;
+  height: 100%;
   // height: 100%;
 }
 //
@@ -85,7 +85,8 @@ footer{
   height: 40px;
   width: 100%;
   position: absolute;
-  top: calc(100% - 40px);
+  // padding-top: 40px;
+  bottom: 0;
   background-color: black;
 }
 //
@@ -122,8 +123,10 @@ $gray-medium-light: #eaeaea;
 
 body {
   padding-top: 60px;
+  padding-bottom: 40px;
   min-height: 100%;
-  height: 100%;
+  position: relative;
+  // height: 100%;
 }
 
 section {
@@ -476,7 +479,3 @@ span.picture {
   position: relative;
   margin: 10px auto;
 }
-
-// .selectpicker{
-//   display: block!important;
-// }
