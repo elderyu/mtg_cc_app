@@ -2,10 +2,16 @@
   <thead>
     <tr>
       <th scope="col">Image</th>
-      <th scope="col">Name</th>
+      <th scope="col" style="width: 200px">
+        Name
+        <%= form_for(collection_path, method: :get) do |f| %>
+          <%= f.submit "desc" %>
+          <%= f.submit "asc" %>
+        <% end %>
+      </th>
       <th scope="col">Card Type</th>
       <th scope="col">Mana cost</th>
-      <th scope="col">Power/<br>Toughness</th>
+      <th scope="col">Power Toughness</th>
       <th scope="col">Description</th>
       <th scope="col">Number of copies</th>
       <th scope="col">Delete</th>
@@ -74,4 +80,5 @@
   old_text = document.getElementsByClassName('mana_cost');
   old_text.style.display="none";
   console.log(old_text.innerHTML);
+
 </script>

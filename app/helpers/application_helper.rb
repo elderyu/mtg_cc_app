@@ -43,4 +43,11 @@ module ApplicationHelper
     cookies.delete(:remember_token)
   end
 
+  def save_mana_cost mana_cost
+    if mana_cost.present?
+      mana_cost = mana_cost.tr('{}',' ')
+    end
+    mana_cost
+  end
+
 end

@@ -5,45 +5,102 @@
       <th scope="col">Name</th>
       <th scope="col">Card Type</th>
       <th scope="col">Mana cost</th>
-      <th scope="col">Power/Toghness</th>
+      <th scope="col">Power/Toughness</th>
       <th scope="col">Description</th>
       <th scope="col">Add to collection</th>
     </tr>
   </thead>
   <tbody>
     <% @result["data"].each do |result|%>
-    <tr>
-      <td class="images">
-        <% if result["layout"] == "transform" %>
-        <div class="row">
-          <% result["card_faces"].each do |face| %>
-          <div class="column">
-            <%= image_tag("#{face["image_uris"]["small"]}", alt: "mtg card") %>
+      <% if result["layout"] == "transform" %>
+        <% result["card_faces"].each do |result| %>
+        <tr>
+          <td class="images">
+            <% if result["layout"] == "transform" %>
+            <div class="row">
+              <% result["card_faces"].each do |face| %>
+              <div class="column">
+                <%= image_tag("#{face["image_uris"]["small"]}", alt: "mtg card") %>
+              </div>
+              <% end %>
+            <% else %>
+              <%= image_tag("#{result["image_uris"]["small"]}", alt: "mtg card") %>
+            </div>
+            <% end %>
+          </td>
+          <td> <%= result["name"] %> </td>
+          <td> <%= result["type_line"] %> </td>
+          <td style="min-width: 120px">
+            <% if result["mana_cost"].present? %>
+              <% (save_mana_cost result["mana_cost"]).split(' ').each do |mana| %>
+                <% if mana == "//" %>
+                  //
+                <% else %>
+                  <% mana.tr!('/ ','') %>
+                  <img src=<%= "http://gatherer.wizards.com/Handlers/Image.ashx?size=medium&name=#{mana}&type=symbol" %> alt="mana">
+                <% end %>
+              <% end %>
+            <% end %>
+          </td>
+          <td> <%= result["power"].present? ? (result["power"] + " / " + result["toughness"]) : "-/-" %> </td>
+          <td> <%= result["oracle_text"] %> </td>
+          <% if logged_in? %>
+            <td>
+              <%= form_for(:cards, url: add_path) do |form| %>
+                <%= hidden_field_tag :layout, result["layout"] %>
+                <%= hidden_field_tag :name, result["name"] %>
+                <%= form.label :count %>
+                <%= form.text_field :count, class: 'form-control' %>
+                <%= form.submit "Add this card to your collection", class: "btn btn-primary btn-wrap" %>
+              <% end %>
+            </td>
+          <% end %>
+        </tr>
+        <% end %>
+      <% else %>
+      <tr>
+        <td class="images">
+          <% if result["layout"] == "transform" %>
+          <div class="row">
+            <% result["card_faces"].each do |face| %>
+            <div class="column">
+              <%= image_tag("#{face["image_uris"]["small"]}", alt: "mtg card") %>
+            </div>
+            <% end %>
+          <% else %>
+            <%= image_tag("#{result["image_uris"]["small"]}", alt: "mtg card") %>
           </div>
           <% end %>
-
-        <% else %>
-          <%= image_tag("#{result["image_uris"]["small"]}", alt: "mtg card") %>
-        </div>
-        <% end %>
-      </td>
-      <td> <%= result["name"] %> </td>
-      <td> <%= result["type_line"] %> </td>
-      <td> <%= result["mana_cost"] %> </td>
-      <td> <%= result["power"].present? ? (result["power"] + " / " + result["toughness"]) : "-/-" %> </td>
-      <td> <%= result["oracle_text"] %> </td>
-      <% if logged_in? %>
-        <td>
-          <%= form_for(:cards, url: add_path) do |form| %>
-            <%= hidden_field_tag :layout, result["layout"] %>
-            <%= hidden_field_tag :name, result["name"] %>
-            <%= form.label :count %>
-            <%= form.text_field :count, class: 'form-control' %>
-            <%= form.submit "Add this card to your collection", class: "btn btn-primary btn-wrap" %>
+        </td>
+        <td> <%= result["name"] %> </td>
+        <td> <%= result["type_line"] %> </td>
+        <td style="min-width: 120px">
+          <% if result["mana_cost"].present? %>
+            <% (save_mana_cost result["mana_cost"]).split(' ').each do |mana| %>
+              <% if mana == "//" %>
+                //
+              <% else %>
+                <% mana.tr!('/ ','') %>
+                <img src=<%= "http://gatherer.wizards.com/Handlers/Image.ashx?size=medium&name=#{mana}&type=symbol" %> alt="mana">
+              <% end %>
+            <% end %>
           <% end %>
         </td>
+        <td> <%= result["power"].present? ? (result["power"] + " / " + result["toughness"]) : "-/-" %> </td>
+        <td> <%= result["oracle_text"] %> </td>
+        <% if logged_in? %>
+          <td>
+            <%= form_for(:cards, url: add_path) do |form| %>
+              <%= hidden_field_tag :layout, result["layout"] %>
+              <%= hidden_field_tag :name, result["name"] %>
+              <%= form.label :count %>
+              <%= form.text_field :count, class: 'form-control' %>
+              <%= form.submit "Add this card to your collection", class: "btn btn-primary btn-wrap" %>
+            <% end %>
+          </td>
+        <% end %>
+      </tr>
       <% end %>
-    </tr>
     <% end %>
   </tbody>
 </table>

@@ -2,8 +2,14 @@ class CollectedCardsController < ApplicationController
 
   def show
     @result = current_user.cards
-    # @mana_cost = @result["mana_cost"]
-    # Rails::logger.debug @result[1]["mana_cost"].class
+    if params[:commit] == "asc"
+      @result = @result.order(:name)
+    elsif params[:commit] == "desc"
+      @result = @result.order(:name).reverse
+    end
+    # raise
+    # end
+    # Rails::logger.debug params
   end
 
   def create

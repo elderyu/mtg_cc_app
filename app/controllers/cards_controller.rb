@@ -12,13 +12,6 @@ class CardsController < ApplicationController
   end
 
   def find
-    # if params[:total_cards] == "1" || params[:total_cards] == nil
-    #   @result = params
-    # else
-    #   @result = params["data"]
-    # end
-    # bardzo temporary !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    # @result = nil
     @colors = ["white", "blue", "black", "red", "green", "colorless"]
     @types = ["creature", "instant", "enchantment", "planeswalker", "other"]
     @colors_images = Hash.new()
@@ -39,6 +32,7 @@ class CardsController < ApplicationController
         append += add_colors_to_search
         append += add_cmc_to_search
         append += add_power_to_search
+        append += add_toughness_to_search
         request_get_and_save append
       rescue OpenURI::HTTPError => e
         flash.now[:danger] = "Card not found." if e.message == "404 Not Found"
@@ -47,43 +41,45 @@ class CardsController < ApplicationController
     render 'search'
   end
 
+  def name_asc
+
+  end
+
   private
 
     def add_types_to_search
       if params[:cards][:card_type].count == 1
         return ""
+      end
+      types_to_search = Array.new
+      params[:cards][:card_type].each do |type|
+        types_to_search << CGI::escape("type:" + type.downcase)
+      end
+      if types_to_search.count == 1
+        return "+#{types_to_search[0]}"
       else
-        types_to_search = Array.new
-        params[:cards][:card_type].each do |type|
-          types_to_search << CGI::escape("type:" + type.downcase)
-        end
-        if types_to_search.count == 1
-          types_to_search = "+#{types_to_search[0]}"
-        else
-          types_to_search = types_to_search.join("+OR+")
-          types_to_search = "+" + CGI::escape("(") +types_to_search + CGI::escape(")")
-        end
+        types_to_search = types_to_search.join("+OR+")
+        return "+" + CGI::escape("(") +types_to_search + CGI::escape(")")
       end
     end
 
     def add_colors_to_search
-      colors_to_search = ""
-      # Uwaga: jak nie ma nic do przekazania w tablicy to do parmasów domyślnie dorzucany jest "", żeby tablica była
-      params[:cards][:color][1..-1].each do |color|
-          if color == "blue"
-            colors_to_search += "U"
-          else
-            colors_to_search += color.capitalize[0]
-          end
+      if params[:cards][:color].count == 1
+        return ""
       end
-      unless colors_to_search == ""
-        if params["cards"]["match_colors_roughly"] == "1"
-          colors_to_search = "+" + CGI::escape("color<=#{colors_to_search}")
+      colors_to_search = ""
+      params[:cards][:color][1..-1].each do |color|
+        if color == "blue"
+          colors_to_search += "U"
         else
-          colors_to_search = "+" + CGI::escape("color=#{colors_to_search}")
+          colors_to_search += color.capitalize[0]
         end
       end
-      colors_to_search
+      if params["cards"]["match_colors_roughly"] == "1"
+        return "+" + CGI::escape("color<=#{colors_to_search}")
+      else
+        return "+" + CGI::escape("color=#{colors_to_search}")
+      end
     end
 
     def add_cmc_to_search
@@ -95,16 +91,46 @@ class CardsController < ApplicationController
           cmc_to_search << CGI::escape("cmc=" + cmc)
         end
         if cmc_to_search.count == 1
-          cmc_to_search = "+#{cmc_to_search[0]}"
+          return "+#{cmc_to_search[0]}"
         else
           cmc_to_search = cmc_to_search.join("+OR+")
-          cmc_to_search = "+" + CGI::escape("(") + cmc_to_search + CGI::escape(")")
+          return "+" + CGI::escape("(") + cmc_to_search + CGI::escape(")")
         end
       end
-      cmc_to_search
     end
 
     def add_power_to_search
+      if params[:cards][:power].count == 1
+        return ""
+      else
+        power_to_search = Array.new
+        params[:cards][:power][1..-1].each do |power|
+          power_to_search << CGI::escape("power=" + power)
+        end
+        if power_to_search.count == 1
+          return "+#{power_to_search[0]}"
+        else
+          power_to_search = power_to_search.join("+OR+")
+          return "+" + CGI::escape("(") + power_to_search + CGI::escape(")")
+        end
+      end
+    end
+
+    def add_toughness_to_search
+      if params[:cards][:toughness].count == 1
+        return ""
+      else
+        toughness_to_search = Array.new
+        params[:cards][:toughness][1..-1].each do |toughness|
+          toughness_to_search << CGI::escape("toughness=" + toughness)
+        end
+        if toughness_to_search.count == 1
+          return "+#{toughness_to_search[0]}"
+        else
+          toughness_to_search = toughness_to_search.join("+OR+")
+          return "+" + CGI::escape("(") + toughness_to_search + CGI::escape(")")
+        end
+      end
     end
 
     def permitted_params
@@ -117,6 +143,7 @@ class CardsController < ApplicationController
       Rails::logger.debug url
       buffer = open(url).read
       result = JSON.parse(buffer)
+      # @result = Cards.where("")
       if result.present?
         @result = result
         if result["data"].present?
@@ -125,7 +152,6 @@ class CardsController < ApplicationController
         else
           save_one_card result
         end
-        # flash.now[:danger] = result
       end
     end
 
@@ -174,10 +200,4 @@ class CardsController < ApplicationController
       end
     end
 
-    def save_mana_cost mana_cost
-      if mana_cost.present?
-        mana_cost = mana_cost.tr('{}',' ')
-      end
-      mana_cost
-    end
 end
