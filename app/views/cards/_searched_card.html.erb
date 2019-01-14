@@ -6,11 +6,13 @@
       <%= image_tag("#{face["image_uris"]["normal"]}", alt: "mtg card") %>
     <% end %>
   <% end %>
-  <%= form_for(:cards, url: add_path) do |form| %>
-    <%= hidden_field_tag :layout, @result["layout"] %>
-    <%= hidden_field_tag :name, @result["name"] %>
-    <%= form.label :count %>
-    <%= form.text_field :count, class: 'form-control' %>
-    <%= form.submit "Add this card to your collection", class: "btn btn-primary btn-wrap" %>
+  <% if logged_in? %>
+    <%= form_for(:cards, url: add_path) do |form| %>
+      <%= hidden_field_tag :layout, @result["layout"] %>
+      <%= hidden_field_tag :name, @result["name"] %>
+      <%= form.label :count %>
+      <%= form.text_field :count, class: 'form-control' %>
+      <%= form.submit "Add this card to your collection", class: "btn btn-primary btn-wrap" %>
+    <% end %>
   <% end %>
 </div>
