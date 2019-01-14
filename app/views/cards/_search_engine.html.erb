@@ -48,6 +48,10 @@
         <%= form.check_box "match_name_exactly", class: 'form-check-input'%>
         Match name exactly (search for a card with this exact name)
       </ul>
+      <ul>
+        <%= form.check_box "all_prints", class: 'form-check-input'%>
+        Show all prints of a card
+      </ul>
       <div id="button-random-card">
         <%= form.submit("Or find me a random card!", class: "btn btn-primary") %>
       </div>

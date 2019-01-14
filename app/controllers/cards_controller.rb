@@ -28,6 +28,7 @@ class CardsController < ApplicationController
       begin
         append = params[:cards][:match_name_exactly] == "1" ? "/named?exact=" : "/search?q="
         append += params[:cards][:card_name] if params[:cards][:card_name].present?
+        append += "+unique%3Aprints" if params[:cards][:all_prints] == "1"
         append += add_types_to_search
         append += add_colors_to_search
         append += add_cmc_to_search
