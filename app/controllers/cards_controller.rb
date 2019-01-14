@@ -33,18 +33,17 @@ class CardsController < ApplicationController
     # temp end
     else
       begin
-        # append = "/named?"
         append = params[:cards][:match_name_exactly] == "1" ? "/named?exact=" : "/search?q="
         append += params[:cards][:card_name] if params[:cards][:card_name].present?
         append += add_types_to_search
         append += add_colors_to_search
-        Rails::logger.debug append
+        append += add_cmc_to_search
+        append += add_power_to_search
         request_get_and_save append
       rescue OpenURI::HTTPError => e
         flash.now[:danger] = "Card not found." if e.message == "404 Not Found"
       end
     end
-    # raise
     render 'search'
   end
 
@@ -58,15 +57,11 @@ class CardsController < ApplicationController
         params[:cards][:card_type].each do |type|
           types_to_search << CGI::escape("type:" + type.downcase)
         end
-        if types_to_search.empty?
-          return ""
+        if types_to_search.count == 1
+          types_to_search = "+#{types_to_search[0]}"
         else
-          if types_to_search.count == 1
-            types_to_search = "+#{types_to_search[0]}"
-          else
-            types_to_search = types_to_search.join("+OR+")
-            types_to_search = "+" + CGI::escape("(") +types_to_search + CGI::escape(")")
-          end
+          types_to_search = types_to_search.join("+OR+")
+          types_to_search = "+" + CGI::escape("(") +types_to_search + CGI::escape(")")
         end
       end
     end
@@ -91,6 +86,27 @@ class CardsController < ApplicationController
       colors_to_search
     end
 
+    def add_cmc_to_search
+      if params[:cards][:cmc].count == 1
+        return ""
+      else
+        cmc_to_search = Array.new
+        params[:cards][:cmc][1..-1].each do |cmc|
+          cmc_to_search << CGI::escape("cmc=" + cmc)
+        end
+        if cmc_to_search.count == 1
+          cmc_to_search = "+#{cmc_to_search[0]}"
+        else
+          cmc_to_search = cmc_to_search.join("+OR+")
+          cmc_to_search = "+" + CGI::escape("(") + cmc_to_search + CGI::escape(")")
+        end
+      end
+      cmc_to_search
+    end
+
+    def add_power_to_search
+    end
+
     def permitted_params
       params.permit(:user_id, :card_id, :name, :cards["count"])
     end
@@ -98,6 +114,7 @@ class CardsController < ApplicationController
     def request_get_and_save url_extra=''
       url_base = "https://api.scryfall.com/cards"
       url = url_base + url_extra
+      Rails::logger.debug url
       buffer = open(url).read
       result = JSON.parse(buffer)
       if result.present?
