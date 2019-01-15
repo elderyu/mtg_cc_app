@@ -23,14 +23,15 @@ ActiveRecord::Schema.define(version: 2019_01_15_112705) do
     t.string "toughness"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "mana_cost", default: "--- []\n"
+    t.string "mana_cost"
     t.string "card_id"
   end
 
   create_table "collected_cards", force: :cascade do |t|
     t.integer "user_id"
     t.integer "count"
-    t.integer "card_id"
+    t.string "card_id"
+    t.string "face_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

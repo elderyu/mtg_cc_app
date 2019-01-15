@@ -185,6 +185,7 @@ class CardsController < ApplicationController
         oracle_text: save_oracle_text(card),
         power: card["power"],
         toughness: card["toughness"],
+        card_id: card["id"]
       )
       card.save
     end

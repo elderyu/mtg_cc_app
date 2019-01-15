@@ -7,9 +7,6 @@ class CollectedCardsController < ApplicationController
     elsif params[:commit] == "desc"
       @result = @result.order(:name).reverse
     end
-    # raise
-    # end
-    # Rails::logger.debug params
   end
 
   def create
@@ -55,12 +52,12 @@ class CollectedCardsController < ApplicationController
     end
 
     def add_face_to_collection face_name
-      collected_card = Card.find_by(name: face_name)
-      if found_card = CollectedCard.find_by(user_id: current_user.id, card_id: collected_card.id)
+      collected_card = Card.find_by(card_id: params["card_id"])
+      if found_card = CollectedCard.find_by(user_id: current_user.id, face_id: collected_card.card_id)
         found_card.update(count: (found_card.count + params["cards"]["count"].to_i))
       else
         current_user.add_card collected_card
-        CollectedCard.find_by(user_id: current_user.id, card_id: collected_card.id).update(count: params["cards"]["count"])
+        CollectedCard.find_by(user_id: current_user.id, card_id: collected_card.id).update(count: params["cards"]["count"], face_id: collected_card.card_id)
       end
       flash[:success] = "#{params[:name]} successfully added to your collection! Total number of copies: #{CollectedCard.find_by(user_id: current_user.id, card_id: collected_card.id).count}"
     end
