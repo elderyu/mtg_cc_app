@@ -11,7 +11,6 @@ class CollectedCardsController < ApplicationController
 
   def create
     if params["cards"]["count"].nil?
-      flash.now[:danger] = "Number of cards was not specified."
       # zmienić na redirect to post with correct name
       request_get_and_save "/named?exact=#{params[:name]}"
     else

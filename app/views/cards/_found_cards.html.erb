@@ -43,7 +43,7 @@
             <% end %>
           </td>
           <td> <%= result["power"].present? ? (result["power"] + " / " + result["toughness"]) : "-/-" %> </td>
-          <td> <%= result["oracle_text"] %> </td>
+          <td class="mana"> <%= result["oracle_text"] %> </td>
           <% if logged_in? %>
             <td>
               <%= form_for(:cards, url: add_path) do |form| %>
@@ -105,3 +105,7 @@
     <% end %>
   </tbody>
 </table>
+
+<script type="text/javascript" src="app/assets/javascripts/manaChange.js">
+
+</script>
