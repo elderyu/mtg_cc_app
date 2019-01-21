@@ -109,30 +109,24 @@
 <script>
   "use strict"
   document.addEventListener("DOMContentLoaded", function(e) {
-    var manaString = document.getElementsByClassName("mana");
-    var length = manaString.length;
+    var manaHTMLCollection = document.getElementsByClassName("mana");
+    var length = manaHTMLCollection.length;
+    var manaBeginAt, manaEndAt, manaMeltingText, newText, foundMana, foundManaNoBrackets;
     for(var i=0; i<length; i++){
-      var textText = manaString[i].innerHTML;
-      var mana = "";
-      var meltingText = textText;
-      var foundMana;
-      var foundManaAt = 1;
-      var foundManaTrimmed;
-      var newText = textText;
-      while(foundManaAt > 0){
-        manaBeginAt = meltingText.search(/{([BWUGRCT\d]+\/*)+}/i);
-        if(manaBeginAt < 0) break;
-        var manaEndAt = meltingText.search(/}/);
-        foundMana = meltingText.slice(manaBeginAt,manaEndAt+1);
-        meltingText = meltingText.slice(manaEndAt+1);
+      newText = manaHTMLCollection[i].innerHTML;
+      manaMeltingText = newText;
+      while((manaBeginAt = manaMeltingText.search(/{([BWUGRCT\d]+\/*)+}/i)) >= 0){
+        manaEndAt = manaMeltingText.search(/}/);
+        foundMana = manaMeltingText.slice(manaBeginAt,manaEndAt+1);
         foundManaNoBrackets = foundMana.slice(1,-1);
-        newText = newText.replace(foundMana,addManaImgURL(foundManaNoBrackets));
+        newText = newText.replace(foundMana,returnManaImgURL(foundManaNoBrackets));
+        manaMeltingText = manaMeltingText.slice(manaEndAt+1);
       }
-      manaString[i].innerHTML = newText;
+      manaHTMLCollection[i].innerHTML = newText;
     }
   });
 
-  function addManaImgURL(symbol){
+  function returnManaImgURL(symbol){
     if(symbol == "T") symbol = "tap";
     return "<img src=\"http://gatherer.wizards.com/Handlers/Image.ashx?size=medium&amp;name=" + symbol + "&amp;type=symbol\">";
   }
