@@ -1,24 +1,11 @@
 class CardsController < ApplicationController
-  require 'open-uri'
+  require 'open-uri' # może się przydać
+  before_action :setupBasicVariables, only: [:search, :find]
 
   def search
-    # @result = nil
-    @colors = ["white", "blue", "black", "red", "green", "colorless"]
-    @types = ["creature", "instant", "sorcery", "enchantment", "planeswalker", "land", "other"]
-    @colors_images = Hash.new()
-    @colors.each do |color|
-      @colors_images[color] = "http://gatherer.wizards.com/images/Redesign/#{color.capitalize}_Mana.png"
-    end
   end
 
   def find
-    @colors = ["white", "blue", "black", "red", "green", "colorless"]
-    @types = ["creature", "instant", "enchantment", "planeswalker", "land", "other"]
-    @colors_images = Hash.new()
-    @colors.each do |color|
-      @colors_images[color] = "http://gatherer.wizards.com/images/Redesign/#{color.capitalize}_Mana.png"
-    end
-
     # temp
     # jeśli jest random, szukaj randoma, jeśli nie, czegoś konkretnego
     if params[:commit].include?("random")
@@ -42,18 +29,21 @@ class CardsController < ApplicationController
     render 'search'
   end
 
-  def name_asc
-
-  end
-
   private
 
+  def setupBasicVariables
+    @colors = ["white", "blue", "black", "red", "green", "colorless"]
+    @types = ["basic", "clue","cartouche", "curse", "saga", "treasure", "vehicle", "legendary", "token", "artifact", "conspiracy", "creature", "emblem", "equipment", "aura", "instant", "sorcery", "enchantment", "plane", "planeswalker", "scheme", "tribal", "land", "world"].sort
+    @colors_images = {}
+    @colors.each do |color|
+      @colors_images[color] = "http://gatherer.wizards.com/images/Redesign/#{color.capitalize}_Mana.png"
+    end
+  end
+
     def add_types_to_search
-      if params[:cards][:card_type].count == 1
-        return ""
-      end
-      types_to_search = Array.new
-      params[:cards][:card_type].each do |type|
+      return "" if params[:cards][:card_type].count == 1
+      types_to_search = []
+      params[:cards][:card_type][1..-1].each do |type|
         types_to_search << CGI::escape("type:" + type.downcase)
       end
       if types_to_search.count == 1
@@ -65,12 +55,10 @@ class CardsController < ApplicationController
     end
 
     def add_colors_to_search
-      if params[:cards][:color].count == 1
-        return ""
-      end
+      return "" if params[:cards][:color].count == 1
       colors_to_search = ""
       params[:cards][:color][1..-1].each do |color|
-        if color == "blue"
+        if color == "Blue"
           colors_to_search += "U"
         else
           colors_to_search += color.capitalize[0]
@@ -84,36 +72,38 @@ class CardsController < ApplicationController
     end
 
     def add_cmc_to_search
-      if params[:cards][:cmc].count == 1
-        return ""
-      else
-        cmc_to_search = Array.new
-        params[:cards][:cmc][1..-1].each do |cmc|
+      return "" if params[:cards][:cmc].count == 1
+      cmc_to_search = Array.new
+      params[:cards][:cmc][1..-1].each do |cmc|
+        if(cmc=="10+")
+          cmc_to_search << CGI::escape("cmc>10")
+        else
           cmc_to_search << CGI::escape("cmc=" + cmc)
         end
-        if cmc_to_search.count == 1
-          return "+#{cmc_to_search[0]}"
-        else
-          cmc_to_search = cmc_to_search.join("+OR+")
-          return "+" + CGI::escape("(") + cmc_to_search + CGI::escape(")")
-        end
+      end
+      if cmc_to_search.count == 1
+        return "+#{cmc_to_search[0]}"
+      else
+        cmc_to_search = cmc_to_search.join("+OR+")
+        return "+" + CGI::escape("(") + cmc_to_search + CGI::escape(")")
       end
     end
 
     def add_power_to_search
-      if params[:cards][:power].count == 1
-        return ""
-      else
-        power_to_search = Array.new
-        params[:cards][:power][1..-1].each do |power|
+      return "" if params[:cards][:power].count == 1
+      power_to_search = []
+      params[:cards][:power][1..-1].each do |power|
+        if(power=="10+")
+          power_to_search << CGI::escape("power>10")
+        else
           power_to_search << CGI::escape("power=" + power)
         end
-        if power_to_search.count == 1
-          return "+#{power_to_search[0]}"
-        else
-          power_to_search = power_to_search.join("+OR+")
-          return "+" + CGI::escape("(") + power_to_search + CGI::escape(")")
-        end
+      end
+      if power_to_search.count == 1
+        return "+#{power_to_search[0]}"
+      else
+        power_to_search = power_to_search.join("+OR+")
+        return "+" + CGI::escape("(") + power_to_search + CGI::escape(")")
       end
     end
 
@@ -123,7 +113,11 @@ class CardsController < ApplicationController
       else
         toughness_to_search = Array.new
         params[:cards][:toughness][1..-1].each do |toughness|
-          toughness_to_search << CGI::escape("toughness=" + toughness)
+          if(toughness=="10+")
+            toughness_to_search << CGI::escape("toughness>10")
+          else
+            toughness_to_search << CGI::escape("toughness=" + toughness)
+          end
         end
         if toughness_to_search.count == 1
           return "+#{toughness_to_search[0]}"
@@ -144,7 +138,6 @@ class CardsController < ApplicationController
       Rails::logger.debug url
       buffer = open(url).read
       result = JSON.parse(buffer)
-      # @result = Cards.where("")
       if result.present?
         @result = result
         if result["data"].present?
@@ -196,9 +189,9 @@ class CardsController < ApplicationController
         card["card_faces"].each do |face|
           oracle_text << (face["name"] + ": " + face["oracle_text"] + "\n")
         end
-        oracle_text
+        return oracle_text
       else
-        card["oracle_text"]
+        return card["oracle_text"]
       end
     end
 

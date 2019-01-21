@@ -45,6 +45,7 @@ module ApplicationHelper
 
   def save_mana_cost mana_cost
     if mana_cost.present?
+      # raise
       mana_cost = mana_cost.tr('{}',' ')
     end
     mana_cost

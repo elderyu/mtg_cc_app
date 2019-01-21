@@ -37,7 +37,7 @@
                   //
                 <% else %>
                   <% mana.tr!('/ ','') %>
-                  <img src=("http://gatherer.wizards.com/Handlers/Image.ashx?size=medium&name=" + mana + "&type=symbol") alt="mana">
+                  <img src=<%= "http://gatherer.wizards.com/Handlers/Image.ashx?size=medium&name=" + mana + "&type=symbol" %> alt="mana">
                 <% end %>
               <% end %>
             <% end %>
