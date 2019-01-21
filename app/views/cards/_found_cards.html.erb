@@ -37,7 +37,7 @@
                   //
                 <% else %>
                   <% mana.tr!('/ ','') %>
-                  <img src=<%= "http://gatherer.wizards.com/Handlers/Image.ashx?size=medium&name=#{mana}&type=symbol" %> alt="mana">
+                  <img src=("http://gatherer.wizards.com/Handlers/Image.ashx?size=medium&name=" + mana + "&type=symbol") alt="mana">
                 <% end %>
               <% end %>
             <% end %>
@@ -87,7 +87,7 @@
           <% end %>
         </td>
         <td> <%= result["power"].present? ? (result["power"] + " / " + result["toughness"]) : "-/-" %> </td>
-        <td> <%= result["oracle_text"] %> </td>
+        <td class="mana"> <%= result["oracle_text"] %> </td>
         <% if logged_in? %>
           <td>
             <%= form_for(:cards, url: add_path) do |form| %>
@@ -106,6 +106,35 @@
   </tbody>
 </table>
 
-<script type="text/javascript" src="app/assets/javascripts/manaChange.js">
+<script>
+  "use strict"
+  document.addEventListener("DOMContentLoaded", function(e) {
+    var manaString = document.getElementsByClassName("mana");
+    var length = manaString.length;
+    for(var i=0; i<length; i++){
+      var textText = manaString[i].innerHTML;
+      var mana = "";
+      var meltingText = textText;
+      var foundMana;
+      var foundManaAt = 1;
+      var foundManaTrimmed;
+      var newText = textText;
+      while(foundManaAt > 0){
+        manaBeginAt = meltingText.search(/{([BWUGRCT\d]+\/*)+}/i);
+        if(manaBeginAt < 0) break;
+        var manaEndAt = meltingText.search(/}/);
+        foundMana = meltingText.slice(manaBeginAt,manaEndAt+1);
+        meltingText = meltingText.slice(manaEndAt+1);
+        foundManaNoBrackets = foundMana.slice(1,-1);
+        newText = newText.replace(foundMana,addManaImgURL(foundManaNoBrackets));
+      }
+      manaString[i].innerHTML = newText;
+    }
+  });
+
+  function addManaImgURL(symbol){
+    if(symbol == "T") symbol = "tap";
+    return "<img src=\"http://gatherer.wizards.com/Handlers/Image.ashx?size=medium&amp;name=" + symbol + "&amp;type=symbol\">";
+  }
 
 </script>

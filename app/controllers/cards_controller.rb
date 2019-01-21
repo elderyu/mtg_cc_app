@@ -4,7 +4,7 @@ class CardsController < ApplicationController
   def search
     # @result = nil
     @colors = ["white", "blue", "black", "red", "green", "colorless"]
-    @types = ["creature", "instant", "sorcery", "enchantment", "planeswalker", "other"]
+    @types = ["creature", "instant", "sorcery", "enchantment", "planeswalker", "land", "other"]
     @colors_images = Hash.new()
     @colors.each do |color|
       @colors_images[color] = "http://gatherer.wizards.com/images/Redesign/#{color.capitalize}_Mana.png"
@@ -13,7 +13,7 @@ class CardsController < ApplicationController
 
   def find
     @colors = ["white", "blue", "black", "red", "green", "colorless"]
-    @types = ["creature", "instant", "enchantment", "planeswalker", "other"]
+    @types = ["creature", "instant", "enchantment", "planeswalker", "land", "other"]
     @colors_images = Hash.new()
     @colors.each do |color|
       @colors_images[color] = "http://gatherer.wizards.com/images/Redesign/#{color.capitalize}_Mana.png"
