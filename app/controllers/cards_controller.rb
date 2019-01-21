@@ -184,14 +184,15 @@ class CardsController < ApplicationController
     end
 
     def save_oracle_text card
+      raise
       if card["layout"] == "split"
         oracle_text = ""
         card["card_faces"].each do |face|
           oracle_text << (face["name"] + ": " + face["oracle_text"] + "\n")
         end
-        return oracle_text
+        oracle_text
       else
-        return card["oracle_text"]
+        card["oracle_text"]
       end
     end
 
