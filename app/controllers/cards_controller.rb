@@ -160,14 +160,15 @@ class CardsController < ApplicationController
     def save_one_card card
       if card["layout"] == "transform"
         card["card_faces"].each do |face|
-          save_one_face face
+          save_one_face face, card["id"]
         end
       else
         save_one_face card
       end
     end
 
-    def save_one_face card
+    def save_one_face card, id=""
+      # raise
       card = Card.new(
         name: card["name"],
         image_url_normal: card["image_uris"]["normal"],
@@ -178,21 +179,29 @@ class CardsController < ApplicationController
         oracle_text: save_oracle_text(card),
         power: card["power"],
         toughness: card["toughness"],
-        card_id: card["id"]
+        card_id: save_card_id(card, id)
       )
       card.save
     end
 
+    def save_card_id(card, id)
+      if card["id"].present?
+        return card["id"]
+      else
+        return id+card["name"]
+      end
+    end
+
     def save_oracle_text card
-      raise
+      # raise
       if card["layout"] == "split"
         oracle_text = ""
         card["card_faces"].each do |face|
           oracle_text << (face["name"] + ": " + face["oracle_text"] + "\n")
         end
-        oracle_text
+        return oracle_text
       else
-        card["oracle_text"]
+        return card["oracle_text"]
       end
     end
 

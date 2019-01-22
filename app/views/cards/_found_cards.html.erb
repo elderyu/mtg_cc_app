@@ -13,26 +13,20 @@
   <tbody>
     <% @result["data"].each do |result|%>
       <% if result["layout"] == "transform" %>
-        <% result["card_faces"].each do |result| %>
+        <% result["card_faces"].each do |face| %>
         <tr>
           <td class="images">
-            <% if result["layout"] == "transform" %>
             <div class="row">
-              <% result["card_faces"].each do |face| %>
               <div class="column">
                 <%= image_tag("#{face["image_uris"]["small"]}", alt: "mtg card") %>
               </div>
-              <% end %>
-            <% else %>
-              <%= image_tag("#{result["image_uris"]["small"]}", alt: "mtg card") %>
             </div>
-            <% end %>
           </td>
-          <td> <%= result["name"] %> </td>
-          <td> <%= result["type_line"] %> </td>
+          <td> <%= face["name"] %> </td>
+          <td> <%= face["type_line"] %> </td>
           <td style="min-width: 120px">
-            <% if result["mana_cost"].present? %>
-              <% (save_mana_cost result["mana_cost"]).split(' ').each do |mana| %>
+            <% if face["mana_cost"].present? %>
+              <% (save_mana_cost face["mana_cost"]).split(' ').each do |mana| %>
                 <% if mana == "//" %>
                   //
                 <% else %>
@@ -42,13 +36,15 @@
               <% end %>
             <% end %>
           </td>
-          <td> <%= result["power"].present? ? (result["power"] + " / " + result["toughness"]) : "-/-" %> </td>
-          <td class="mana"> <%= result["oracle_text"] %> </td>
+          <td> <%= face["power"].present? ? (face["power"] + " / " + face["toughness"]) : "-/-" %> </td>
+          <td class="mana"> <%= face["oracle_text"] %> </td>
           <% if logged_in? %>
             <td>
               <%= form_for(:cards, url: add_path) do |form| %>
-                <%= hidden_field_tag :layout, result["layout"] %>
-                <%= hidden_field_tag :name, result["name"] %>
+                <%= hidden_field_tag :layout, face["layout"] %>
+                <%= hidden_field_tag :name, face["name"] %>
+                <%= hidden_field_tag :card_id, result["id"] %>
+                <%# <% raise %> %>
                 <%= form.label :count %>
                 <%= form.text_field :count, class: 'form-control' %>
                 <%= form.submit "Add this card to your collection", class: "btn btn-primary btn-wrap" %>
